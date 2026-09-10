@@ -1,56 +1,34 @@
-const Header = (props) => {
-  console.log(props)
-  return <h1>{props.course}</h1>
-};
+import { useState } from "react";
 
-const Part = (props) => {
-  return (
-    <p>
-      {props.part} {props.exercises}
-    </p>
-  );
-};
 
-const Content = (props) => {
-  return (
-    <div>
-      <Part part={props.parts[0].name} exercises={props.parts[0].exercises} />
-      <Part part={props.parts[1].name} exercises={props.parts[1].exercises} />
-      <Part part={props.parts[2].name} exercises={props.parts[2].exercises} />
-    </div>
-  );
-};
+const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
 
-const Total = (props) => {  
-  return <p>Number of exercises {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises}</p>;
-};
+const Display = ({text}) => <h2>{text}</h2>
 
+const Statistics = ({name, count}) => <p>{name} {count}</p>
+    
+  
 const App = () => {
-  const course = {
-    name: 'Half Stack application development',
-    parts: [
-      {
-        name: 'Fundamentals of React',
-        exercises: 10
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7
-      },
-      {
-        name: 'State of a component',
-        exercises: 14
-      }
-    ]
-  }
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+  
+  const increaseGood = () => setGood(good + 1) 
+  const increaseNeutral = () => setNeutral(neutral + 1)
+  const increaseBad = () => setBad(bad + 1)
 
-  return (
+  return(
     <div>
-      <Header course={course.name} />
-      <Content parts={course.parts}/>
-      <Total parts={course.parts} />
+      <Display text={'give feedback'} />
+      <Button onClick={increaseGood} text='good' />
+      <Button onClick={increaseNeutral} text='neutral' />
+      <Button onClick={increaseBad} text='bad' />
+      <Display text={'statistics'} />
+      <Statistics name={'good'} count={good}/>
+      <Statistics name={'neutral'} count={neutral}/>
+      <Statistics name={'bad'} count={bad}/>
     </div>
-  );
-};
+  )
+}
 
 export default App;
