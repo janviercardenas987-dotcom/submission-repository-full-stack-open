@@ -5,7 +5,24 @@ const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
 
 const Display = ({text}) => <h2>{text}</h2>
 
-const Statistics = ({name, count}) => <p>{name} {count}</p>
+const Statistics = ({good, neutral, bad, all}) => {
+  
+  let average = all === 0 ? 0 :(good - bad) / all;
+  let positive = all === 0 ? 0 :(good / all) * 100
+
+  return(
+   < div>
+    <p>good {good}</p>
+    <p>neutral {neutral}</p>
+    <p>bad {bad}</p>
+    <p>neutral {neutral}</p>
+    <p>all {all}</p>
+    <p>average {average}</p> 
+    <p>positive {positive}</p>
+   </div>
+  
+
+)}
     
   
 const App = () => {
@@ -13,7 +30,7 @@ const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
   const [all, setAll] = useState(0);
-  
+
   const increaseGood = () => { 
     const updateGood = good + 1
     setGood(updateGood)
@@ -31,9 +48,7 @@ const App = () => {
     setAll(good + neutral + updateBad)
   }
 
-  let average = all === 0 ? 0 :(good - bad) / all;
-  let positive = all === 0 ? 0 :(good / all) * 100
-
+  
   return(
     <div>
       <Display text={'give feedback'} />
@@ -44,12 +59,8 @@ const App = () => {
 
       <Display text={'statistics'} />
 
-      <Statistics name={'good'} count={good}/>
-      <Statistics name={'neutral'} count={neutral}/>
-      <Statistics name={'bad'} count={bad}/>
-      <Statistics name={'all'} count={all} />
-      <Statistics name={'average'} count={average} />
-      <Statistics name={'positive'} count={positive} />
+      <Statistics good={good} neutral={neutral} bad={bad} all={all}/>
+      
 
     </div>
   )
