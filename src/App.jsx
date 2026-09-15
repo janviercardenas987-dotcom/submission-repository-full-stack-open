@@ -17,16 +17,29 @@ const App = () => {
 
   const[selected, setSelected] = useState(0);
 
+  const [votes, setVotes] = useState(new Array(8).fill(0));
+
   const generatedIndex = () => {
     const tam = anecdotes.length;
     let num = Math.floor(Math.random() * tam);
     setSelected(num)
   }
+
+  const vote = () => {
+    const copyVotes = [...votes];   
+    console.log(copyVotes);
+    copyVotes[selected] += 1;
+    setVotes(copyVotes);
+    console.log(copyVotes);
+  }
+
   return(
-    <article>
+    <section>
       <p>{anecdotes[selected]}</p>
+      <p>has {votes[selected]} votes</p>
+      <Button onClick={vote} text={'vote'}/>
       <Button onClick={generatedIndex} text={'next anecdote'}/>
-    </article>
+    </section>
   )
 }
 
