@@ -3,6 +3,15 @@ import { useState } from "react";
 
 const Button = ({onClick, text}) => <button onClick={onClick}>{text}</button>
 
+const MostVotes = ({anecdote, maxVotes}) => {
+  return(
+    <div>
+      <p>{anecdote}</p>
+      <p>has {maxVotes} votes</p>
+    </div>
+  );
+};
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -19,6 +28,8 @@ const App = () => {
 
   const [votes, setVotes] = useState(new Array(8).fill(0));
 
+  const [countVotes, setCountVotes] = useState(0);
+
   const generatedIndex = () => {
     const tam = anecdotes.length;
     let num = Math.floor(Math.random() * tam);
@@ -27,18 +38,26 @@ const App = () => {
 
   const vote = () => {
     const copyVotes = [...votes];   
-    console.log(copyVotes);
     copyVotes[selected] += 1;
     setVotes(copyVotes);
-    console.log(copyVotes);
   }
+
+  const maxVotes = Math.max(...votes);
+  const mostVoteIndex = votes.indexOf(maxVotes);
 
   return(
     <section>
-      <p>{anecdotes[selected]}</p>
-      <p>has {votes[selected]} votes</p>
-      <Button onClick={vote} text={'vote'}/>
-      <Button onClick={generatedIndex} text={'next anecdote'}/>
+      <div>
+        <h2>Anecdote of the day</h2>
+        <p>{anecdotes[selected]}</p>
+        <p>has {votes[selected]} votes</p>
+        <Button onClick={vote} text={'vote'}/>
+        <Button onClick={generatedIndex} text={'next anecdote'}/>
+      </div>
+      <div>
+        <h2>Anedote with most votes</h2>
+        <MostVotes anecdote={anecdotes[mostVoteIndex]} maxVotes={maxVotes}/>
+      </div>
     </section>
   )
 }
