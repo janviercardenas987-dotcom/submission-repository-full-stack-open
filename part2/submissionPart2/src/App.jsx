@@ -1,5 +1,6 @@
 import Header from "./Course/Header";
 import Content from "./Course/Content";
+import Total from "./Course/Total";
 
 const App = () => {
   const course = {
@@ -16,6 +17,10 @@ const App = () => {
       {
         name: 'State of a component',
         exercises: 14
+      },
+      {
+        name:'Redux',
+        exercises: 11
       }
     ]
   }
@@ -24,6 +29,7 @@ const App = () => {
     <div>
       <Header course={course.name} />
       <Content parts={course.parts}/>
+      <Total parts={course.parts}/>
     </div>
   );
 };
