@@ -1,8 +1,10 @@
 import Header from "./Course/Header";
 import Content from "./Course/Content";
-import Total from "./Course/Total";
+//import Total from "./Course/Total";
+
 
 const App = () => {
+
   const course = {
     name: 'Half Stack application development',
     parts: [
@@ -25,11 +27,17 @@ const App = () => {
     ]
   }
 
+
+  const total = course.parts.reduce((sum, tot) => {return sum + tot.exercises}, 0)
+  console.log(total);
+
+
   return (
     <div>
       <Header course={course.name} />
       <Content parts={course.parts}/>
-      <Total parts={course.parts}/>
+      <strong>Total of {total} exercises</strong>
+
     </div>
   );
 };
