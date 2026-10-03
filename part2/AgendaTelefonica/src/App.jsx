@@ -10,12 +10,17 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault();
-    const nameObject = {
+    if(persons.some(person => person.name === newName)) {
+      window.alert(`${newName} is already added to phonebook`)
+    }else{
+      const nameObject = {
       name: newName,
-    };
-
-    setPersons(persons.concat(nameObject)); 
-    setNewName('');
+      };
+        setPersons(persons.concat(nameObject)); 
+        setNewName('');
+    }
+      
+   
   }
 // Falta: value={newName} y onChange={handleNameChange} dentro de la etiqueta ``.
   const handleNameChange = (event) => {
@@ -40,7 +45,6 @@ const App = () => {
             <Person person={person} />)
           }</ul>
           <h2>Numbers</h2>
-          
         </form>
       <div>debug: {newName}</div>
     </div>
