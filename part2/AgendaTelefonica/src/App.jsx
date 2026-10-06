@@ -1,109 +1,100 @@
 import { useEffect, useState } from "react";
 import Filter from "./Components/Filter";
-import Person from "./Components/Persons";
 import Number from "./Components/Number";
 import PersonForm from "./Components/PersonForm";
 import personsServices from "./services/persons";
-import axios from "axios";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [filter, setFilter] = useState('');
 
+  useEffect(() => {
+    personsServices.getAll().then(setPersons);
+  }, []);
+
   const addName = (event) => {
     event.preventDefault();
-    if(persons.some(person => person.name === newName)) {
-      window.alert(`${newName} is already added to phonebook`);
-      return;
 
-    }else if(persons.some(person => person.number === newNumber)){
+    const nameObject = { name: newName, number: newNumber };
+    const existing = persons.find(p => p.name === newName);
+
+    if (existing) {
+      const ok = window.confirm(
+        `${newName} is already added to phonebook, replace the old number with a new one?`
+      );
+
+      if (ok) {
+        personsServices
+          .update(existing.id, nameObject)
+          .then(returnedPerson => {
+            setPersons(persons.map(p =>
+              p.id === existing.id ? returnedPerson : p
+            ));
+            setNewName('');
+            setNewNumber('');
+          })
+          .catch(error => console.error('Error al actualizar:', error));
+      }
+      return;
+    }
+
+    if (persons.some(p => p.number === newNumber)) {
       window.alert(`${newNumber} is already added to phonebook`);
       return;
     }
-    const nameObject = {
-      name: newName,
-      number: newNumber,
-    };
 
     personsServices
-    .create(nameObject)
-    .then(returnedPerson => {
-      console.log(returnedPerson)
-      setPersons(persons.concat(returnedPerson)); 
-      setNewName('');
-      setNewNumber('');
-    })
-  }
-
-  const hook = () => {
-    personsServices
-    .getAll()
-    .then(returnedPerson => {
-      setPersons(returnedPerson)
-    })
+      .create(nameObject)
+      .then(returnedPerson => {
+        setPersons(prev => prev.concat(returnedPerson));
+        setNewName('');
+        setNewNumber('');
+      })
+      .catch(error => console.error('Error al crear:', error));
   };
 
-  useEffect(hook, []);
-
-  console.log(`render ${persons.length} notes`);
-
   const toggleDelete = (id) => {
-    const ok = window.confirm(`Do you want delete this person?`)
-    if(ok){
-      personsServices
+    const ok = window.confirm('Do you want to delete this person?');
+    if (!ok) return;
+
+    personsServices
       .deletePerson(id)
-      .then(response => {
-      setPersons(persons.filter(p => p.id !== id))
-    })
-    return
-    }
-  }
+      .then(() => {
+        setPersons(prev => prev.filter(p => p.id !== id));
+      })
+      .catch(error => console.error('Error al eliminar:', error));
+  };
 
-
-  const filterPerson = persons.filter(p => 
+  const filterPerson = persons.filter(p =>
     p.name.toLowerCase().includes(filter.toLowerCase())
   );
 
-  const handleNameChange = (event) => {
-    console.log(event.target.value);
-    setNewName(event.target.value);
-  }
-  
-  const handleNumberChange = (event) => {
-    console.log(event.target.value);
-    setNewNumber(event.target.value);
-  }
+  const handleNameChange = (e) => setNewName(e.target.value);
+  const handleNumberChange = (e) => setNewNumber(e.target.value);
+  const handleFilterPerson = (e) => setFilter(e.target.value);
 
-  const handleFilterPerson = (event) => {
-    setFilter(event.target.value);
-  } 
-
-  return(
+  return (
     <div>
-        <h2>Phonebook</h2>
+      <h2>Phonebook</h2>
+      <Filter 
+      filter={filter} 
+      handleFilterPerson={handleFilterPerson} />
 
-        <Filter 
-        filter={filter} 
-        handleFilterPerson={handleFilterPerson}
-        />
-
-        <h2>Add a new</h2>
-        <PersonForm 
+      <h2>Add a new</h2>
+      <PersonForm
         addName={addName}
         newName={newName}
         handleNameChange={handleNameChange}
         newNumber={newNumber}
         handleNumberChange={handleNumberChange}
-        />
+      />
 
-        <h2>Numbers</h2>
-        
-        <Number filterPerson={filterPerson} toggleDelete={toggleDelete}/>
+      <h2>Numbers</h2>
+      <Number filterPerson={filterPerson} toggleDelete={toggleDelete} />
     </div>
-  )
-}
+  );
+};
 
 export default App;
