@@ -23,13 +23,19 @@ const App = () => {
       return;
     }
     const nameObject = {
-      id: persons.length + 1,
       name: newName,
       number: newNumber,
     };
-    setPersons(persons.concat(nameObject)); 
-    setNewName('');
-    setNewNumber('');
+
+    axios
+    .post('http://localhost:3001/persons', nameObject)
+    .then(response => {
+      console.log(response)
+      setPersons(persons.concat(response.data)); 
+      setNewName('');
+      setNewNumber('');
+    })
+    
   }
 
   const hook = () => {
@@ -81,8 +87,7 @@ const App = () => {
         />
 
         <h2>Numbers</h2>
-
-
+        
         <Number filterPerson={filterPerson}/>
     </div>
   )
