@@ -3,6 +3,7 @@ import Filter from "./Components/Filter";
 import Person from "./Components/Persons";
 import Number from "./Components/Number";
 import PersonForm from "./Components/PersonForm";
+import personsServices from "./services/persons";
 import axios from "axios";
 
 const App = () => {
@@ -27,27 +28,39 @@ const App = () => {
       number: newNumber,
     };
 
-    axios
-    .post('http://localhost:3001/persons', nameObject)
-    .then(response => {
-      console.log(response)
-      setPersons(persons.concat(response.data)); 
+    personsServices
+    .create(nameObject)
+    .then(returnedPerson => {
+      console.log(returnedPerson)
+      setPersons(persons.concat(returnedPerson)); 
       setNewName('');
       setNewNumber('');
     })
-    
   }
 
   const hook = () => {
-    axios.get('http://localhost:3001/persons') 
-    .then(response => {
-      setPersons(response.data);
-    });
+    personsServices
+    .getAll()
+    .then(returnedPerson => {
+      setPersons(returnedPerson)
+    })
   };
 
   useEffect(hook, []);
 
   console.log(`render ${persons.length} notes`);
+
+  const toggleDelete = (id) => {
+    const ok = window.confirm(`Do you want delete this person?`)
+    if(ok){
+      personsServices
+      .deletePerson(id)
+      .then(response => {
+      setPersons(persons.filter(p => p.id !== id))
+    })
+    return
+    }
+  }
 
 
   const filterPerson = persons.filter(p => 
@@ -88,7 +101,7 @@ const App = () => {
 
         <h2>Numbers</h2>
         
-        <Number filterPerson={filterPerson}/>
+        <Number filterPerson={filterPerson} toggleDelete={toggleDelete}/>
     </div>
   )
 }

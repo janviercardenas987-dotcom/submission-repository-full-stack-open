@@ -26,14 +26,14 @@
       "id": "aPnPH7daNbE"
     },
     {
-      "name": "Juan Gomez",
-      "number": "91-412-1414212",
-      "id": "ppsX1uFobqc"
-    },
-    {
       "name": "Linus Torlvalds",
       "number": "25-91-832912",
       "id": "47l5B575lgA"
+    },
+    {
+      "name": "María",
+      "number": "89-982-144252",
+      "id": "hKJjz5UKVRU"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
