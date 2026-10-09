@@ -34,6 +34,16 @@
       "name": "María",
       "number": "89-982-144252",
       "id": "hKJjz5UKVRU"
+    },
+    {
+      "name": "Margaret Hamilton",
+      "number": "16-07-1969932",
+      "id": "fD3opGZhk1U"
+    },
+    {
+      "name": "Brenda Eich",
+      "number": "10-95-927192",
+      "id": "SwUs7DhAa-g"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
